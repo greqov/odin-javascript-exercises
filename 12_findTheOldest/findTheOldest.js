@@ -1,20 +1,25 @@
 const findTheOldest = function () {
   const [people] = [...arguments];
 
-  // get lifetime arr
-  const lifetime = people.map((user) => {
-    const currentYear = new Date().getFullYear();
-    const yearOfDeath = user.yearOfDeath || currentYear;
-    return yearOfDeath - user.yearOfBirth;
+  function getYearOfDeath(person) {
+    return person.yearOfDeath || new Date().getFullYear();
+  }
+
+  // 1. With reduce method
+  return people.reduce((prev, curr) => {
+    const prevLifetime = getYearOfDeath(prev) - prev.yearOfBirth;
+    const currLifetime = getYearOfDeath(curr) - curr.yearOfBirth;
+
+    return prevLifetime > currLifetime ? prev : curr;
   });
 
-  // get index of the max lifetime
+  // 2. With map method
+  const lifetime = people.map((user) => getYearOfDeath(user) - user.yearOfBirth);
   const max = Math.max(...lifetime);
   const index = lifetime.findIndex((i) => i === max);
 
-  // return user obj with index
   return people[index];
-};
+};;
 
 // Do not edit below this line
 module.exports = findTheOldest;
